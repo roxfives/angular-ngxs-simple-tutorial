@@ -8,6 +8,7 @@ import { Tutorial, } from './../models/tutorial.model'
 import {
     TutorialAction,
 } from './../actions/tutorial.actions'
+import { ImmutableContext, ImmutableSelector } from '@ngxs-labs/immer-adapter';
 
 
 export class TutorialStateModel {
@@ -23,24 +24,29 @@ export class TutorialStateModel {
 export class TutorialState {
 
     @Selector()
+    @ImmutableSelector()
     static getTutorials(state: TutorialStateModel) {
-        return state.tutorials;
+        return state.tutorials.reverse();
     }
 
     @Action(TutorialAction.Add)
-    add({ getState, patchState }: StateContext<TutorialStateModel>, 
+    @ImmutableContext()
+    add({ setState }: StateContext<TutorialStateModel>, 
         { payload }: TutorialAction.Add) {
-        const state = getState();
-        patchState({
-            tutorials: [...state.tutorials, payload],
-        })
+        setState((state: TutorialStateModel) => {
+            state.tutorials.push(payload);
+            return state;
+        });
     }
 
     @Action(TutorialAction.Remove)
-    remove({ getState, patchState }: StateContext<TutorialStateModel>, 
+    @ImmutableContext()
+    remove({ setState }: StateContext<TutorialStateModel>, 
         { payload }: TutorialAction.Remove) {
-        patchState({
-            tutorials: getState().tutorials.filter(a => a.name != payload),
-        })
+        setState((state: TutorialStateModel) => {
+            state.tutorials.filter(aTutorial =>
+                aTutorial.name != payload);
+            return state;
+        });
     }
 }
