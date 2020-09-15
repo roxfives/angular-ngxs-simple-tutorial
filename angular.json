@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "state-ngxs"
+    }
+  },
+  "defaultProject": "state-ngxs",
+  "cli": {
+    "analytics": "6bac9e1d-5d48-4418-9047-4847fbb1e5ee"
+  }
 }
